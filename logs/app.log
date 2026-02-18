@@ -1,0 +1,2 @@
+2026-02-18 21:38:38,131 - INFO - Received input: [0.0]
+2026-02-18 21:38:38,132 - ERROR - Prediction failed: 'LogisticRegression' object has no attribute 'feature_names_in_'
