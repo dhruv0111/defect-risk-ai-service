@@ -1,0 +1,5 @@
+Dataset,Mean_AUC,Std_AUC,Mean_Recall_Defect
+cm1.csv,0.8023,0.0963,0.7289
+kc1.csv,0.8023,0.0169,0.6994
+pc1.csv,0.8383,0.0427,0.7175
+jm1.csv,0.725,0.015,0.5972

@@ -1,0 +1,13 @@
+Dataset,Strategy,Mean_AUC,Mean_Recall_Defect
+cm1.csv,none,0.7967,0.0622
+cm1.csv,class_weight,0.8023,0.7289
+cm1.csv,smote,0.7885,0.6267
+kc1.csv,none,0.8011,0.2053
+kc1.csv,class_weight,0.8023,0.6994
+kc1.csv,smote,0.7957,0.6903
+pc1.csv,none,0.8337,0.1317
+pc1.csv,class_weight,0.8383,0.7175
+pc1.csv,smote,0.8226,0.69
+jm1.csv,none,0.7228,0.0942
+jm1.csv,class_weight,0.725,0.5972
+jm1.csv,smote,0.7233,0.5968

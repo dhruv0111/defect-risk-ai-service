@@ -4,64 +4,73 @@ import os
 import joblib
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
 
 from preprocess import load_data, split_features_target, scale_features
+from evaluate import evaluate_model, plot_roc, find_best_threshold
 
 
-DATA_PATH = "data/cm1.csv"
-ARTIFACT_PATH = "artifacts"
+# Dynamically resolve project root
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_PATH = os.path.join(BASE_DIR, "data", "cm1.csv")
+ARTIFACT_PATH = os.path.join(BASE_DIR, "artifacts")
 
 
 def train_model():
     """
-    Full training pipeline:
+    Full research-grade training pipeline:
     - Load data
     - Preprocess
     - Train model
+    - Evaluate with AUC & ROC
+    - Optimize threshold
     - Save artifacts
     """
 
-    # 1. Load dataset
+    print("\n🔹 Loading dataset...")
     df = load_data(DATA_PATH)
 
-    # 2. Split features and target
+    print("🔹 Splitting features and target...")
     X, y = split_features_target(df)
 
-    # 3. Scale features
+    print("🔹 Scaling features...")
     X_scaled, scaler = scale_features(X)
 
-    # 4. Train-test split (for evaluation only)
+    print("🔹 Performing train-test split...")
     X_train, X_test, y_train, y_test = train_test_split(
-        X_scaled, y,
+        X_scaled,
+        y,
         test_size=0.2,
         random_state=42,
         stratify=y
     )
 
-    # 5. Initialize model
+    print("🔹 Training Logistic Regression model...")
     model = LogisticRegression(
         class_weight="balanced",
         max_iter=1000,
         random_state=42
     )
 
-    # 6. Train model
     model.fit(X_train, y_train)
 
-    # 7. Evaluate
-    y_pred = model.predict(X_test)
-    print("\nClassification Report:\n")
-    print(classification_report(y_test, y_pred))
+    print("\n🔹 Evaluating model performance...")
+    y_prob = evaluate_model(model, X_test, y_test)
 
-    # 8. Ensure artifact directory exists
+    print("\n🔹 Optimizing decision threshold...")
+    best_threshold = find_best_threshold(y_test, y_prob)
+
+    print(f"\n✅ Best Threshold Found: {round(best_threshold, 4)}")
+
+    print("\n🔹 Plotting ROC Curve...")
+    plot_roc(y_test, y_prob)
+
+    # Save artifacts
     os.makedirs(ARTIFACT_PATH, exist_ok=True)
 
-    # 9. Save model & scaler
     joblib.dump(model, os.path.join(ARTIFACT_PATH, "model.pkl"))
     joblib.dump(scaler, os.path.join(ARTIFACT_PATH, "scaler.pkl"))
 
-    print("\nModel and scaler saved successfully.")
+    print("\n✅ Model and scaler saved successfully.")
 
 
 if __name__ == "__main__":

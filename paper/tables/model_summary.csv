@@ -1,0 +1,4 @@
+Model,AUC
+Logistic Regression,0.6589
+Random Forest,0.6594
+Gradient Boosting,0.655
